@@ -72,7 +72,6 @@ RUN apk add --no-cache \
 	&& git submodule init \
 	&& git submodule update \
 	&& file install/dlib/lib/libdlib.a \
-	&& cd dlib_fix \
 	&& cmake -G 'Unix Makefiles' . \
 	&& make
 
