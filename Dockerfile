@@ -43,8 +43,12 @@ LABEL author="skibum1869" description="Docker image for the latest MTConnect C++
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
-## for testing alpine build
-RUN apk add curl alpine-sdk
+## for testing alpine release
+RUN apk add --no-cache \
+	curl \
+	libxml2-dev \
+	libc6-compat \
+	libstdc++
 
 # RUN mkdir /MTC_Agent/ 
 # COPY <src> <dest>
