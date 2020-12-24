@@ -35,10 +35,30 @@ RUN apt-get update \
 	&& cmake -G 'Unix Makefiles' . \
 	&& make
 
+# ---- glibc instance ----
+### alpine glibc instance
+FROM alpine:latest AS alpine-glibc
+RUN apk add --no-cache \
+	curl \
+	libc6-compat \
+	libstdc++ \
+    wget \
+    ca-certificates
+# Get and install glibc for alpine
+ARG APK_GLIBC_VERSION=2.29-r0
+ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
+ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
+ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
+    && apk --no-cache add "${APK_GLIBC_FILE}"               \
+    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
+    && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
+    && rm glibc-*
+
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
-# FROM ubuntu:latest AS release
-FROM alpine:latest AS release
+FROM alpine-glibc AS release
 LABEL author="skibum1869" description="Docker image for the latest MTConnect C++ Agent supplied \
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
