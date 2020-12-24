@@ -38,7 +38,8 @@
 # ---- alpine glibc instance ----
 ### alpine glibc instance
 FROM alpine:latest AS alpine-glibc
-RUN apk add --no-cache \
+RUN apk cache clean && \
+	apk add --no-cache \
 	curl \
 	# libc6-compat \
 	libstdc++6 \
