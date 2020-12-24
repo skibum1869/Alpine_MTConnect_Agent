@@ -1,33 +1,71 @@
 #!/bin/sh
-# ---- Base Node ----
-# This dockerfile defines the expected runtime environment before the project is installed
-FROM ubuntu:latest AS base
-# FROM debian:latest AS base
+# # ---- Base Ubuntu Node ----
+# # This dockerfile defines the expected runtime environment before the project is installed
+# FROM ubuntu:latest AS base
+# # FROM debian:latest AS base
 
-# ---- Dependencies ----
-### Be sure to install any runtime dependencies
-FROM base AS dependencies
+# # ---- Ubuntu Dependencies ----
+# ### Be sure to install any runtime dependencies
+# FROM base AS dependencies
 
-ENV DEBIAN_FRONTEND=noninteractive
+# ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get clean \
-	&& apt-get update \
-	&& apt-get install -y \
+# RUN apt-get clean \
+# 	&& apt-get update \
+# 	&& apt-get install -y \
+# 	curl \
+# 	libxml2-dev \
+# 	libcppunit-dev \
+# 	build-essential
+
+# # ---- Ubuntu Core ----
+# ### Application compile
+# FROM dependencies AS core
+
+# RUN apt-get update \
+# 	&& apt-get install -y \
+# 	apt-utils \
+# 	make \
+# 	cmake \
+# 	git \
+# 	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
+# 	&& cd /app_build/ \
+# 	&& git submodule init \
+# 	&& git submodule update \
+# 	&& cmake -G 'Unix Makefiles' . \
+# 	&& make
+
+# # ---- alpine glibc instance ----
+# ### alpine glibc instance
+# FROM alpine:latest AS alpine-glibc
+# RUN apk add --no-cache \
+# 	curl \
+# 	# libc6-compat \
+# 	libstdc++6 \
+# 	libstdc++ \
+# 	wget \
+# 	ca-certificates
+# # Get and install glibc for alpine
+# ARG APK_GLIBC_VERSION=2.32-r0
+# ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
+# ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
+# ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
+# RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+#     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
+#     && apk --no-cache add "${APK_GLIBC_FILE}"               \
+#     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
+#     && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
+#     && rm glibc-*
+
+# ---- alpine make ----
+### alpine glibc instance
+FROM alpine-glibc AS alpine-make
+RUN apk add --no-cache \
+	alpine-sdk \
 	curl \
 	libxml2-dev \
-	libcppunit-dev \
-	build-essential
-
-# ---- Core ----
-### Application compile
-FROM dependencies AS core
-
-RUN apt-get update \
-	&& apt-get install -y \
-	apt-utils \
 	make \
 	cmake \
-	git \
 	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
@@ -35,26 +73,6 @@ RUN apt-get update \
 	&& cmake -G 'Unix Makefiles' . \
 	&& make
 
-# ---- glibc instance ----
-### alpine glibc instance
-FROM alpine:latest AS alpine-glibc
-RUN apk add --no-cache \
-	curl \
-	# libc6-compat \
-	libstdc++ \
-    wget \
-    ca-certificates
-# Get and install glibc for alpine
-ARG APK_GLIBC_VERSION=2.32-r0
-ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
-ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
-ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
-    && apk --no-cache add "${APK_GLIBC_FILE}"               \
-    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
-    && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
-    && rm glibc-*
 
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
@@ -75,10 +93,16 @@ EXPOSE 5000:5000/tcp
 COPY docker-entrypoint.sh /MTC_Agent/
 COPY agent.cfg /MTC_Agent/
 COPY ./Devices/ /MTC_Agent/
-COPY --from=core app_build/schemas/ /MTC_Agent/schemas
-COPY --from=core app_build/simulator/ /MTC_Agent/simulator
-COPY --from=core app_build/styles/ /MTC_Agent/styles
-COPY --from=core app_build/agent/agent /MTC_Agent/agent
+## Ubuntu Build
+# COPY --from=core app_build/schemas/ /MTC_Agent/schemas
+# COPY --from=core app_build/simulator/ /MTC_Agent/simulator
+# COPY --from=core app_build/styles/ /MTC_Agent/styles
+# COPY --from=core app_build/agent/agent /MTC_Agent/agent
+## Alpine Build
+COPY --from=alpine-make app_build/schemas/ /MTC_Agent/schemas
+COPY --from=alpine-make app_build/simulator/ /MTC_Agent/simulator
+COPY --from=alpine-make app_build/styles/ /MTC_Agent/styles
+COPY --from=alpine-make app_build/agent/agent /MTC_Agent/agent
 
 # Set permission on the folder
 RUN ["chmod", "o+x", "/MTC_Agent/"]
