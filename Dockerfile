@@ -40,7 +40,7 @@ RUN apt-get update \
 FROM alpine:latest AS alpine-glibc
 RUN apk add --no-cache \
 	curl \
-	libc6-compat \
+	# libc6-compat \
 	libstdc++ \
     wget \
     ca-certificates
