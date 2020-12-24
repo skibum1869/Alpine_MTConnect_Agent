@@ -38,7 +38,8 @@
 # ---- alpine glibc instance ----
 ### alpine glibc instance
 FROM alpine:latest AS alpine-glibc
-RUN apk cache clean && \
+RUN apk add cache && \
+	apk cache clean && \
 	apk add --no-cache \
 	curl \
 	# libc6-compat \
