@@ -68,7 +68,7 @@ RUN apk add --no-cache \
 	cmake \
 	file \
 	&& file /usr/lib/libdlib.a \
-	|| git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
+	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
