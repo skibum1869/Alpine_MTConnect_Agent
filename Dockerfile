@@ -44,7 +44,7 @@ from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
 ## for testing alpine build
-RUN apk add curl libxml2-dev build-base # alpine-sdk
+RUN apk add curl alpine-sdk
 
 # RUN mkdir /MTC_Agent/ 
 # COPY <src> <dest>
