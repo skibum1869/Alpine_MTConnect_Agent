@@ -35,27 +35,27 @@
 # 	&& cmake -G 'Unix Makefiles' . \
 # 	&& make
 
-# # ---- alpine glibc instance ----
-# ### alpine glibc instance
-# FROM alpine:latest AS alpine-glibc
-# RUN apk add --no-cache \
-# 	curl \
-# 	# libc6-compat \
-# 	libstdc++6 \
-# 	libstdc++ \
-# 	wget \
-# 	ca-certificates
-# # Get and install glibc for alpine
-# ARG APK_GLIBC_VERSION=2.32-r0
-# ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
-# ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
-# ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
-# RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-#     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
-#     && apk --no-cache add "${APK_GLIBC_FILE}"               \
-#     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
-#     && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
-#     && rm glibc-*
+# ---- alpine glibc instance ----
+### alpine glibc instance
+FROM alpine:latest AS alpine-glibc
+RUN apk add --no-cache \
+	curl \
+	# libc6-compat \
+	libstdc++6 \
+	libstdc++ \
+	wget \
+	ca-certificates
+# Get and install glibc for alpine
+ARG APK_GLIBC_VERSION=2.32-r0
+ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
+ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
+ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
+    && apk --no-cache add "${APK_GLIBC_FILE}"               \
+    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
+    && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
+    && rm glibc-*
 
 # ---- alpine make ----
 ### alpine glibc instance
