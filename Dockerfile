@@ -38,9 +38,7 @@
 # ---- alpine glibc instance ----
 ### alpine glibc instance
 FROM alpine:latest AS alpine-glibc
-RUN apk add cache && \
-	apk cache clean && \
-	apk add --no-cache \
+RUN	apk add --no-cache \
 	curl \
 	# libc6-compat \
 	libstdc++6 \
@@ -68,7 +66,9 @@ RUN apk add --no-cache \
 	libxml2-dev \
 	make \
 	cmake \
-	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
+	file \
+	&& file /usr/lib/libdlib.a \
+	|| git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
