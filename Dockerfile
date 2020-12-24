@@ -39,8 +39,7 @@ RUN apt-get update \
 ### Create folders, copy device files and dependencies for the release
 # FROM ubuntu:latest AS release
 FROM alpine:latest AS release
-LABEL author="skibum1869"
-LABEL description="Docker image for the latest MTConnect C++ Agent supplied \
+LABEL author="skibum1869" description="Docker image for the latest MTConnect C++ Agent supplied \
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
