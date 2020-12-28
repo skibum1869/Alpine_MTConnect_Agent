@@ -3,12 +3,12 @@
 
 # # ---- Base Node ----
 # # This dockerfile defines the expected runtime environment before the project is installed
-# FROM ubuntu:latest AS base
+# FROM ubuntu:latest AS ubuntu-base
 # # FROM debian:latest AS base
 
 # # ---- Core ----
 # ### Application compile
-# FROM base AS core
+# FROM ubuntu-base AS ubuntu-core
 
 # ENV DEBIAN_FRONTEND=noninteractive
 
@@ -36,7 +36,7 @@
 
 # # ---- Release ----
 # ### Create folders, copy device files and dependencies for the release
-# FROM base AS release
+# FROM ubuntu-base AS ubuntu-release
 # ENV DEBIAN_FRONTEND=noninteractive
 # LABEL author="skibum1869" description="Docker image for the latest MTConnect C++ Agent supplied \
 # from the MTConnect Institute"
@@ -47,10 +47,10 @@
 # COPY docker-entrypoint.sh /MTC_Agent/
 # COPY agent.cfg /MTC_Agent/
 # COPY ./Devices/ /MTC_Agent/
-# COPY --from=core app_build/schemas/ /MTC_Agent/schemas
-# COPY --from=core app_build/simulator/ /MTC_Agent/simulator
-# COPY --from=core app_build/styles/ /MTC_Agent/styles
-# COPY --from=core app_build/agent/agent /MTC_Agent/agent
+# COPY --from=ubuntu-core app_build/schemas/ /MTC_Agent/schemas
+# COPY --from=ubuntu-core app_build/simulator/ /MTC_Agent/simulator
+# COPY --from=ubuntu-core app_build/styles/ /MTC_Agent/styles
+# COPY --from=ubuntu-core app_build/agent/agent /MTC_Agent/agent
 
 # # Set permission on the folder
 # RUN ["chmod", "o+x", "/MTC_Agent/"]
@@ -60,7 +60,7 @@
 ### Alpine Version
 # ---- alpine glibc instance ----
 ### alpine glibc instance
-FROM alpine:latest AS alpine-core
+FROM alpine:latest AS alpine-base
 # Get and install glibc for alpine
 RUN	apk add --no-cache \
 	curl \
@@ -79,7 +79,7 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 
 # ---- alpine make ----
 ### alpine glibc instance
-FROM alpine-core AS alpine-make
+FROM alpine-base AS alpine-core
 RUN apk add --no-cache \
 	alpine-sdk \
 	curl \
@@ -88,18 +88,19 @@ RUN apk add --no-cache \
 	libxml2-dev \
 	libstdc++6 \
 	libstdc++ \
-	# libc6-compat \
 	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
-	&& git submodule update \
-	&& cmake -G 'Unix Makefiles' --config Release . \
-	&& make
+	&& git submodule update #\
+	# && cmake -G 'Unix Makefiles' --config Release . \
+	# && make
+
+# libc6-compat not needed since it is in the glibc program above.
 
 
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
-FROM alpine-core AS release
+FROM alpine-base AS alpine-release
 LABEL author="skibum1869" description="Docker image for the latest MTConnect C++ Agent supplied \
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
@@ -116,16 +117,12 @@ EXPOSE 5000:5000/tcp
 COPY docker-entrypoint.sh /MTC_Agent/
 COPY agent.cfg /MTC_Agent/
 COPY ./Devices/ /MTC_Agent/
-## Ubuntu Build
-# COPY --from=core app_build/schemas/ /MTC_Agent/schemas
-# COPY --from=core app_build/simulator/ /MTC_Agent/simulator
-# COPY --from=core app_build/styles/ /MTC_Agent/styles
-# COPY --from=core app_build/agent/agent /MTC_Agent/agent
-## Alpine Build
-COPY --from=alpine-make app_build/schemas/ /MTC_Agent/schemas
-COPY --from=alpine-make app_build/simulator/ /MTC_Agent/simulator
-COPY --from=alpine-make app_build/styles/ /MTC_Agent/styles
-COPY --from=alpine-make app_build/agent/agent /MTC_Agent/agent
+COPY agent  /MTC_Agent/agent
+COPY --from=alpine-core /app_build/schemas/ /MTC_Agent/schemas
+COPY --from=alpine-core /app_build/simulator/ /MTC_Agent/simulator
+COPY --from=alpine-core /app_build/styles/ /MTC_Agent/styles
+# COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
+RUN /lib/ld-musl-x86_64.so.1 --library-path lib /app_build/agent/agent
 
 # Set permission on the folder
 RUN ["chmod", "o+x", "/MTC_Agent/"]
