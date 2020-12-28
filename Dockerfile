@@ -60,7 +60,7 @@
 ### Alpine Version
 # ---- alpine glibc instance ----
 ### alpine glibc instance
-FROM alpine:latest AS alpine-glibc
+FROM alpine:latest AS alpine-core
 # Get and install glibc for alpine
 ARG APK_GLIBC_VERSION=2.32-r0
 ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
@@ -79,7 +79,7 @@ RUN	apk add --no-cache \
 
 # ---- alpine make ----
 ### alpine glibc instance
-FROM alpine-glibc AS alpine-make
+FROM alpine-core AS alpine-make
 RUN apk add --no-cache \
 	alpine-sdk \
 	curl \
@@ -93,13 +93,13 @@ RUN apk add --no-cache \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
-	&& cmake -G 'Unix Makefiles' --debug-output . \
+	&& cmake -G 'Unix Makefiles' --config Release . \
 	&& make
 
 
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
-FROM alpine-glibc AS release
+FROM alpine-core AS release
 LABEL author="skibum1869" description="Docker image for the latest MTConnect C++ Agent supplied \
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
