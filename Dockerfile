@@ -38,13 +38,6 @@
 # ---- alpine glibc instance ----
 ### alpine glibc instance
 FROM alpine:latest AS alpine-glibc
-RUN	apk add --no-cache \
-	curl \
-	# libc6-compat \
-	libstdc++6 \
-	libstdc++ \
-	wget \
-	ca-certificates
 # Get and install glibc for alpine
 ARG APK_GLIBC_VERSION=2.32-r0
 ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
@@ -56,6 +49,10 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
     && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
     && rm glibc-*
+RUN	apk add --no-cache \
+	curl \
+	wget \
+	ca-certificates
 
 # ---- alpine make ----
 ### alpine glibc instance
@@ -63,16 +60,19 @@ FROM alpine-glibc AS alpine-make
 RUN apk add --no-cache \
 	alpine-sdk \
 	curl \
-	libxml2-dev \
+	file \
 	make \
 	cmake \
-	file \
+	libxml2-dev \
+	libstdc++6 \
+	libstdc++ \
+	# libc6-compat \
 	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
 	&& file install/dlib/lib/libdlib.a \
-	&& cmake -G 'Unix Makefiles' . \
+	&& cmake -G 'Unix Makefiles' --debug-output . \
 	&& make
 
 
