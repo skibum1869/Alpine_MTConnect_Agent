@@ -60,7 +60,6 @@ FROM alpine-glibc AS alpine-make
 RUN apk add --no-cache \
 	alpine-sdk \
 	curl \
-	file \
 	make \
 	cmake \
 	libxml2-dev \
@@ -71,7 +70,6 @@ RUN apk add --no-cache \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
-	&& file install/dlib/lib/libdlib.a \
 	&& cmake -G 'Unix Makefiles' --debug-output . \
 	&& make
 
