@@ -1,30 +1,29 @@
 #!/bin/sh
-# # ---- Base Ubuntu Node ----
+### Ubuntu instance
+
+# # ---- Base Node ----
 # # This dockerfile defines the expected runtime environment before the project is installed
 # FROM ubuntu:latest AS base
 # # FROM debian:latest AS base
 
-# # ---- Ubuntu Dependencies ----
-# ### Be sure to install any runtime dependencies
-# FROM base AS dependencies
+# # ---- Core ----
+# ### Application compile
+# FROM base AS core
 
 # ENV DEBIAN_FRONTEND=noninteractive
 
 # RUN apt-get clean \
 # 	&& apt-get update \
 # 	&& apt-get install -y \
+# 	curl
+# RUN apt-get clean \
+# 	&& apt-get update \
+# 	&& apt-get install -y \
 # 	curl \
+# 	apt-utils \
 # 	libxml2-dev \
 # 	libcppunit-dev \
-# 	build-essential
-
-# # ---- Ubuntu Core ----
-# ### Application compile
-# FROM dependencies AS core
-
-# RUN apt-get update \
-# 	&& apt-get install -y \
-# 	apt-utils \
+# 	build-essential \
 # 	make \
 # 	cmake \
 # 	git \
@@ -35,6 +34,30 @@
 # 	&& cmake -G 'Unix Makefiles' . \
 # 	&& make
 
+# # ---- Release ----
+# ### Create folders, copy device files and dependencies for the release
+# FROM base AS release
+# ENV DEBIAN_FRONTEND=noninteractive
+# LABEL author="skibum1869" description="Docker image for the latest MTConnect C++ Agent supplied \
+# from the MTConnect Institute"
+# EXPOSE 5000:5000/tcp
+
+# # RUN mkdir /MTC_Agent/ 
+# # COPY <src> <dest>
+# COPY docker-entrypoint.sh /MTC_Agent/
+# COPY agent.cfg /MTC_Agent/
+# COPY ./Devices/ /MTC_Agent/
+# COPY --from=core app_build/schemas/ /MTC_Agent/schemas
+# COPY --from=core app_build/simulator/ /MTC_Agent/simulator
+# COPY --from=core app_build/styles/ /MTC_Agent/styles
+# COPY --from=core app_build/agent/agent /MTC_Agent/agent
+
+# # Set permission on the folder
+# RUN ["chmod", "o+x", "/MTC_Agent/"]
+# ### EOF
+
+
+### Alpine Version
 # ---- alpine glibc instance ----
 ### alpine glibc instance
 FROM alpine:latest AS alpine-glibc
