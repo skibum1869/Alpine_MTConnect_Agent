@@ -54,8 +54,6 @@
 
 # # Set permission on the folder
 # RUN ["chmod", "o+x", "/MTC_Agent/"]
-# ### EOF
-
 
 ### Alpine Version
 # ---- alpine glibc instance ----
