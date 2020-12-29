@@ -107,7 +107,8 @@ EXPOSE 5000:5000/tcp
 RUN apk add --no-cache \
 	libxml2-dev \
 	libc6-compat \
-	libstdc++
+	libstdc++ \
+	gcc
 
 # RUN mkdir /MTC_Agent/ 
 # COPY <src> <dest>
