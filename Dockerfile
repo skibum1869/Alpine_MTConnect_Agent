@@ -120,8 +120,8 @@ COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
 COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 # COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
-RUN ls /app_build/agent/
-RUN /lib/ld-musl-x86_64.so.1 --library-path lib /app_build/agent/agent
+RUN ls /MTC_Agent/agent/
+RUN /lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent/agent
 
 # Set permission on the folder
 RUN ["chmod", "o+x", "/MTC_Agent/"]
