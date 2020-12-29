@@ -115,6 +115,7 @@ COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
 COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 # COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
 RUN chmod +x /MTC_Agent/agent && \
-	/lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent 
-	# agent.cfg # if included at EOL it runs and doesnt finish building
+	chmod +x /MTC_Agent/docker-entrypoint.sh
+
+ENTRYPOINT ["/bin/sh", "/MTC_Agent/docker-entrypoint.sh"]
 ### EOF
