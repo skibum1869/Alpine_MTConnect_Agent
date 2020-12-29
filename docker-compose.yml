@@ -11,7 +11,7 @@ services:
         mode: host
     entrypoint: "/bin/sh -x docker-entrypoint.sh"
     working_dir: "/MTC_Agent/"
-    container_name: MTConnect_Agent
+    container_name: Alpine_MTConnect_Agent
     restart: unless-stopped
     volumes:
       - type: bind
