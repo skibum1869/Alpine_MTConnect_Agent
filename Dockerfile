@@ -63,7 +63,10 @@ FROM alpine:latest AS alpine-base
 RUN	apk add --no-cache \
 	curl \
 	wget \
-	ca-certificates
+	ca-certificates \
+	libxml2-dev \
+	libstdc++ \
+	gcc
 ARG APK_GLIBC_VERSION=2.32-r0
 ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
 ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
@@ -83,9 +86,7 @@ RUN apk add --no-cache \
 	curl \
 	make \
 	cmake \
-	libxml2-dev \
 	libstdc++6 \
-	libstdc++ \
 	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
@@ -103,24 +104,19 @@ LABEL author="skibum1869" description="Docker image for the latest MTConnect C++
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
-## for testing alpine release
-RUN apk add --no-cache \
-	libxml2-dev \
-	libstdc++ \
-	gcc
-
 # RUN mkdir /MTC_Agent/ 
 # COPY <src> <dest>
 COPY docker-entrypoint.sh /MTC_Agent/
 COPY agent.cfg /MTC_Agent/
 COPY ./Devices/ /MTC_Agent/
-COPY agent /MTC_Agent/agent/
+COPY agent /MTC_Agent/
 COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
 COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 # COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
 RUN ls /MTC_Agent/agent/
-# RUN /lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent/agent
+RUN chmod +x /MTC_Agent/agent
+#RUN /lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent
 
 # Set permission on the folder
 RUN ["chmod", "o+x", "/MTC_Agent/"]
