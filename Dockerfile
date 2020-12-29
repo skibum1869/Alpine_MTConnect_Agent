@@ -116,5 +116,6 @@ COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 # COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
 RUN cd /MTC_Agent/ && \
 	chmod +x /MTC_Agent/agent && \
-	/lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent agent.cfg
+	/lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent 
+	# agent.cfg # if included at EOL it runs and doesnt finish building
 ### EOF
