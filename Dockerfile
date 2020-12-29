@@ -89,8 +89,8 @@ RUN apk add --no-cache \
 	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
-	&& git submodule update #\
-	# && cmake -G 'Unix Makefiles' --config Release . \
+	&& git submodule update \
+	&& cmake -G 'Unix Makefiles' --config Release .
 	# && make
 
 # libc6-compat not needed since it is in the glibc program above.
@@ -116,9 +116,9 @@ COPY docker-entrypoint.sh /MTC_Agent/
 COPY agent.cfg /MTC_Agent/
 COPY ./Devices/ /MTC_Agent/
 COPY agent  /MTC_Agent/agent
-COPY --from=alpine-core /app_build/schemas/ /MTC_Agent/schemas
-COPY --from=alpine-core /app_build/simulator/ /MTC_Agent/simulator
-COPY --from=alpine-core /app_build/styles/ /MTC_Agent/styles
+COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
+COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
+COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 # COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
 RUN /lib/ld-musl-x86_64.so.1 --library-path lib /app_build/agent/agent
 
