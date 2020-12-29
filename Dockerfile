@@ -92,7 +92,7 @@ RUN apk add --no-cache \
 	&& git submodule init \
 	&& git submodule update \
 	&& cmake -G 'Unix Makefiles' --config Release .
-	# && make
+	# && make ## Commented out untill the DLib.cmake file is corrected for tyhe 64 bit binaries.
 
 # libc6-compat not needed since it is in the glibc program above.
 
@@ -116,7 +116,7 @@ COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 # COPY --from=alpine-core app_build/agent/agent /MTC_Agent/agent
 RUN ls /MTC_Agent/
 RUN chmod +x /MTC_Agent/agent
-#RUN /lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent
+RUN /lib/ld-musl-x86_64.so.1 --library-path lib /MTC_Agent/agent
 
 # Set permission on the folder
 RUN ["chmod", "o+x", "/MTC_Agent/"]
