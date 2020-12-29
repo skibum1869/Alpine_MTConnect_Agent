@@ -59,7 +59,12 @@
 # ---- alpine glibc instance ----
 ### alpine glibc instance
 FROM alpine:latest AS alpine-base
+
+# ---- alpine make ----
+### alpine glibc instance
+
 # Get and install glibc for alpine
+FROM alpine-base AS alpine-core
 RUN	apk add --no-cache \
 	curl \
 	wget \
@@ -78,9 +83,7 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
     && rm glibc-*
 
-# ---- alpine make ----
-### alpine glibc instance
-FROM alpine-base AS alpine-core
+# Install and run cmake and make components
 RUN apk add --no-cache \
 	alpine-sdk \
 	curl \
@@ -104,7 +107,11 @@ LABEL author="skibum1869" description="Docker image for the latest MTConnect C++
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
-# RUN mkdir /MTC_Agent/ 
+RUN	apk add --no-cache \
+	libstdc++ \
+	libc6-compat
+
+WORKDIR /MTC_Agent/
 # COPY <src> <dest>
 COPY docker-entrypoint.sh /MTC_Agent/
 COPY agent.cfg /MTC_Agent/
@@ -117,5 +124,5 @@ COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
 RUN chmod +x /MTC_Agent/agent && \
 	chmod +x /MTC_Agent/docker-entrypoint.sh
 
-ENTRYPOINT ["/bin/sh", "/MTC_Agent/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "-x", "/MTC_Agent/docker-entrypoint.sh"]
 ### EOF
