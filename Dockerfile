@@ -106,7 +106,6 @@ EXPOSE 5000:5000/tcp
 ## for testing alpine release
 RUN apk add --no-cache \
 	libxml2-dev \
-	libc6-compat \
 	libstdc++ \
 	gcc
 
