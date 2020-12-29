@@ -104,10 +104,10 @@ from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
 ## for testing alpine release
-# RUN apk add --no-cache \
-# 	libxml2-dev \
-# 	libc6-compat \
-# 	libstdc++
+RUN apk add --no-cache \
+	libxml2-dev \
+	libc6-compat \
+	libstdc++
 
 # RUN mkdir /MTC_Agent/ 
 # COPY <src> <dest>
