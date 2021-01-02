@@ -14,13 +14,13 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: MTConnect_Docker_Agent
+  IMAGE_NAME: MTConnnect_Alpine_Agent
 
 jobs:
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
     # Ensure test job passes before pushing image.
     needs: test
 
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
     if: github.event_name == 'push'
 
     steps:
