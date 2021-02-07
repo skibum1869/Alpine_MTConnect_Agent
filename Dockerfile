@@ -9,32 +9,40 @@ FROM alpine:latest AS alpine-base
 
 # Get and install glibc for alpine
 FROM alpine-base AS alpine-core
-RUN	apk add --no-cache \
-	curl \
-	wget \
-	ca-certificates \
-	libxml2-dev \
-	libstdc++ \
-	gcc
-ARG APK_GLIBC_VERSION=2.32-r0
-ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
-ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
-ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
-    && apk --no-cache add "${APK_GLIBC_FILE}"               \
-    && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
-    && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
-    && rm glibc-*
+
+## Removed to test the 
+# RUN	apk add --no-cache \
+# 	curl \
+# 	wget \
+# 	ca-certificates \
+# 	libxml2-dev \
+# 	libstdc++ \
+# 	gcc \
+# 	alpine-sdk \
+# 	curl \
+# 	make \
+# 	cmake \
+# 	libstdc++6 
+# ARG APK_GLIBC_VERSION=2.32-r0
+# ARG APK_GLIBC_FILE="glibc-${APK_GLIBC_VERSION}.apk"
+# ARG APK_GLIBC_BIN_FILE="glibc-bin-${APK_GLIBC_VERSION}.apk"
+# ARG APK_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${APK_GLIBC_VERSION}"
+# RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+#     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_FILE}"       \
+#     && apk --no-cache add "${APK_GLIBC_FILE}"               \
+#     && wget "${APK_GLIBC_BASE_URL}/${APK_GLIBC_BIN_FILE}"   \
+#     && apk --no-cache add "${APK_GLIBC_BIN_FILE}"           \
+#     && rm glibc-*
+
+## Testing to see if the code above is not needed 
+RUN apk -U \
+	&& apk add git \
+	cmake \
+	g++ \
+	make
 
 # Install and run cmake and make components
-RUN apk add --no-cache \
-	alpine-sdk \
-	curl \
-	make \
-	cmake \
-	libstdc++6 \
-	&& git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
+RUN git clone --recurse-submodules https://github.com/mtconnect/cppagent.git /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
