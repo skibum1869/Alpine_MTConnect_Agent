@@ -10,7 +10,7 @@ FROM alpine:latest AS alpine-base
 # Get and install glibc for alpine
 FROM alpine-base AS alpine-core
 
-## Removed to test the 
+## Removed not needed
 # RUN	apk add --no-cache \
 # 	curl \
 # 	wget \
@@ -35,8 +35,9 @@ FROM alpine-base AS alpine-core
 #     && rm glibc-*
 
 ## Testing to see if the code above is not needed 
-RUN apk -U \
+RUN apk upgrade \
 	&& apk add git \
+	python3 \
 	cmake \
 	g++ \
 	make
