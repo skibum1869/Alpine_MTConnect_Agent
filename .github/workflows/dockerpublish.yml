@@ -14,7 +14,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: MTConnnect_Alpine_Agent
+  IMAGE_NAME: MTConnect_Alpine_Agent
 
 jobs:
   # Run tests.
