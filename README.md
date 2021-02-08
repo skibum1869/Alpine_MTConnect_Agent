@@ -16,8 +16,9 @@ To add asset definitions to the compiled project include the following line unde
 ```bash
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
-FROM alpine-base AS alpine-release
-LABEL author="skibum1869@HEM-Inc" description="Docker image for the latest MTConnect C++ Agent supplied \
+FROM skibum1869/mtconnect_alpine_agent:latest AS release
+LABEL author="skibum1869"
+LABEL description="Docker image for the latest MTConnect C++ Agent supplied \
 from the MTConnect Institute"
 EXPOSE 5000:5000/tcp
 
