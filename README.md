@@ -8,7 +8,7 @@ This project will mirror the log file to the local machine for full trace loggin
 To run the project clone a local instance of the repo.
 
 ``` bash
-git clone https://github.com/skibum1869/MTConnect_Docker.git <name you want for the local repo>
+git clone https://github.com/skibum1869/Alpine_MTConnect_Agent.git <name you want for the local repo>
 ```
 Edit the agent.cfg to meet your requirements and add any devices you need to the folder. This has been tested using subfolders for devises and Assets.
 To add asset definitions to the compiled project include the following line under the devises line see below.
