@@ -1,12 +1,10 @@
 #!/bin/sh
 ### Alpine Version
-# ---- alpine glibc instance ----
-### alpine glibc instance
+
+# ---- alpine base instance ----
 FROM alpine:latest AS alpine-base
 
-# ---- alpine make ----
-### alpine glibc instance
-
+# ---- alpine core ----
 # Get and install glibc for alpine
 FROM alpine-base AS alpine-core
 
@@ -23,7 +21,7 @@ RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppag
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
-	&& cmake -G 'Unix Makefiles' --config Release . #\
+	&& cmake -G 'Unix Makefiles' --config Release .
 	# && make ## Commented out untill the DLib.cmake file is corrected for the 64 bit binaries on the cppagent repo from MTConnect Instute
 
 # ---- Release ----
