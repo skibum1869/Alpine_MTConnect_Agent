@@ -26,9 +26,6 @@ RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppag
 	&& cmake -G 'Unix Makefiles' --config Release . #\
 	# && make ## Commented out untill the DLib.cmake file is corrected for the 64 bit binaries on the cppagent repo from MTConnect Instute
 
-# libc6-compat not needed since it is in the glibc program above.
-
-
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
 FROM alpine-base AS alpine-release
