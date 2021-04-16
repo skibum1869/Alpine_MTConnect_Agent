@@ -21,8 +21,8 @@ RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppag
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
-	&& cmake -G 'Unix Makefiles' --config Release .
-	# && make ## Commented out untill the DLib.cmake file is corrected for the 64 bit binaries on the cppagent repo from MTConnect Instute
+	&& cmake -G 'Unix Makefiles' --config Release . \
+	&& make
 
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
@@ -36,13 +36,13 @@ RUN	apk add --no-cache \
 
 WORKDIR /MTC_Agent/
 # COPY <src> <dest>
-COPY agent agent.cfg docker-entrypoint.sh /MTC_Agent/
+COPY agent.cfg docker-entrypoint.sh /MTC_Agent/
 COPY ./Devices/ /MTC_Agent/
 COPY ./Assets/ /MTC_Agent/assets
 COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
 COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
-# COPY --from=alpine-core app_build/agent/agent /MTC_Agent/
+COPY --from=alpine-core app_build/agent/agent /MTC_Agent/
 
 # Set permission on the folder
 RUN chmod +x /MTC_Agent/agent && \
