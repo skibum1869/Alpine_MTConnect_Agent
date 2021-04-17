@@ -40,8 +40,8 @@ RUN	apk add --no-cache \
 
 WORKDIR /home/app/MTC_Agent
 # COPY <src> <dest>
-COPY agent.cfg docker-entrypoint.sh /home/app/MTC_Agent
-COPY ./Devices/ /home/app/MTC_Agent
+COPY agent.cfg docker-entrypoint.sh /home/app/MTC_Agent/
+COPY ./Devices/ /home/app/MTC_Agent/
 COPY ./Assets/ /home/app/MTC_Agent/assets
 COPY --from=alpine-core app_build/schemas/ /home/app/MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /home/app/MTC_Agent/simulator
