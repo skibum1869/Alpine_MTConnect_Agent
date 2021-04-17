@@ -17,7 +17,7 @@ RUN apk upgrade \
 	make
 
 # Install and run cmake and make components
-RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppagent.git --depth 1 --branch v1.7.0.1 /app_build/ \
+RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppagent.git --depth 1 /app_build/ \
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
