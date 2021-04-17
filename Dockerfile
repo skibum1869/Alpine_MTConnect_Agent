@@ -31,8 +31,8 @@ LABEL author="skibum1869" description="Alpine based docker image for the latest 
 EXPOSE 5000:5000/tcp
 
 # Create an app user so our program doesn't run as root.
-RUN groupadd -r app &&\
-    useradd -r -g app -d /home/app -s /sbin/nologin -c "MTConnect user" app
+RUN addgroup app &&\
+    useradd -G app -D -s /sbin/nologin app
 
 # Set the home directory to our app user's home.
 ENV HOME=/home/app
@@ -63,5 +63,5 @@ RUN RUN chown -R app:app $APP_HOME &&\
 # Change to the app user.
 USER app
 
-ENTRYPOINT ["/bin/sh", "-x", "$APP_HOME/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "-x", "/home/app/MTC_Agent/docker-entrypoint.sh"]
 ### EOF

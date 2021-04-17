@@ -9,12 +9,13 @@ services:
         published: 5000
         protocol: tcp
         mode: host
-    entrypoint: "/bin/sh -x docker-entrypoint.sh"
-    working_dir: "/MTC_Agent/"
+    user: app
+    entrypoint: "/bin/sh -x /home/app/MTC_Agent/docker-entrypoint.sh"
+    working_dir: "/home/app/MTC_Agent"
     container_name: Alpine_MTConnect_Agent
     restart: unless-stopped
     volumes:
       - type: bind
         source: ./log/adapter.log
-        target: /MTC_Agent/adapter.log
+        target: /home/app/MTC_Agent/adapter.log
         consistency: delegated
