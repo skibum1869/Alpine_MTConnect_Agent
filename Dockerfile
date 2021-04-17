@@ -38,9 +38,6 @@ RUN addgroup app &&\
 ENV HOME=/home/app
 ENV APP_HOME=/home/app/MTC_Agent
 
-# Chown all the files to the app user.
-RUN chown -R app:app $APP_HOME
-
 RUN	apk add --no-cache \
 	libstdc++ \
 	libc6-compat
