@@ -49,7 +49,7 @@ COPY --from=alpine-core app_build/styles/ /home/app/MTC_Agent/styles
 COPY --from=alpine-core app_build/agent/agent /home/app/MTC_Agent/
 
 # Set permission on the folder
-RUN RUN chown -R app:app /home/app/MTC_Agent &&\
+RUN chown -R app:app /home/app/MTC_Agent &&\
 	chmod +x /home/app/MTC_Agent/agent && \
 	chmod +x /home/app/MTC_Agent/docker-entrypoint.sh
 
