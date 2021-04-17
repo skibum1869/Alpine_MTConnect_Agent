@@ -34,28 +34,24 @@ EXPOSE 5000:5000/tcp
 RUN addgroup app &&\
     adduser -G app -D -s /sbin/nologin app
 
-# Set the home directory to our app user's home.
-ENV HOME=/home/app
-ENV APP_HOME=/home/app/MTC_Agent
-
 RUN	apk add --no-cache \
 	libstdc++ \
 	libc6-compat
 
-WORKDIR $APP_HOME
+WORKDIR /home/app/MTC_Agent
 # COPY <src> <dest>
-COPY agent.cfg docker-entrypoint.sh $APP_HOME
-COPY ./Devices/ $APP_HOME
-COPY ./Assets/ $APP_HOME/assets
-COPY --from=alpine-core app_build/schemas/ $APP_HOME/schemas
-COPY --from=alpine-core app_build/simulator/ $APP_HOME/simulator
-COPY --from=alpine-core app_build/styles/ $APP_HOME/styles
-COPY --from=alpine-core app_build/agent/agent $APP_HOME/
+COPY agent.cfg docker-entrypoint.sh /home/app/MTC_Agent
+COPY ./Devices/ /home/app/MTC_Agent
+COPY ./Assets/ /home/app/MTC_Agent/assets
+COPY --from=alpine-core app_build/schemas/ /home/app/MTC_Agent/schemas
+COPY --from=alpine-core app_build/simulator/ /home/app/MTC_Agent/simulator
+COPY --from=alpine-core app_build/styles/ /home/app/MTC_Agent/styles
+COPY --from=alpine-core app_build/agent/agent /home/app/MTC_Agent/
 
 # Set permission on the folder
-RUN RUN chown -R app:app $APP_HOME &&\
-	chmod +x $APP_HOME/agent && \
-	chmod +x $APP_HOME/docker-entrypoint.sh
+RUN RUN chown -R app:app /home/app/MTC_Agent &&\
+	chmod +x /home/app/MTC_Agent/agent && \
+	chmod +x /home/app/MTC_Agent/docker-entrypoint.sh
 
 # Change to the app user.
 USER app
