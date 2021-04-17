@@ -32,7 +32,7 @@ EXPOSE 5000:5000/tcp
 
 # Create an app user so our program doesn't run as root.
 RUN addgroup app &&\
-    useradd -G app -D -s /sbin/nologin app
+    adduser -G app -D -s /sbin/nologin app
 
 # Set the home directory to our app user's home.
 ENV HOME=/home/app
