@@ -10,7 +10,7 @@ services:
         protocol: tcp
         mode: host
     user: app
-    entrypoint: "/bin/sh -x /home/app/MTC_Agent/docker-entrypoint.sh"
+    entrypoint: "/bin/sh -x ./docker-entrypoint.sh"
     working_dir: "/home/app/MTC_Agent"
     container_name: Alpine_MTConnect_Agent
     restart: unless-stopped

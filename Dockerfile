@@ -56,5 +56,5 @@ RUN chown -R app:app /home/app/MTC_Agent &&\
 # Change to the app user.
 USER app
 
-ENTRYPOINT ["/bin/sh", "-x", "/home/app/MTC_Agent/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "-x", "./docker-entrypoint.sh"]
 ### EOF
