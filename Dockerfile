@@ -41,7 +41,7 @@ RUN	apk add --no-cache \
 WORKDIR /home/app/MTC_Agent
 # COPY <src> <dest>
 COPY agent.cfg docker-entrypoint.sh /home/app/MTC_Agent/
-COPY ./Devices/ /home/app/MTC_Agent/
+COPY ./Devices/ /home/app/MTC_Agent
 COPY ./Assets/ /home/app/MTC_Agent/assets
 COPY --from=alpine-core app_build/schemas/ /home/app/MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /home/app/MTC_Agent/simulator
@@ -49,7 +49,7 @@ COPY --from=alpine-core app_build/styles/ /home/app/MTC_Agent/styles
 COPY --from=alpine-core app_build/agent/agent /home/app/MTC_Agent/
 
 # Set permission on the folder
-RUN chown -R app:app /home/app/MTC_Agent &&\
+RUN RUN chown -R app:app /home/app/MTC_Agent &&\
 	chmod +x /home/app/MTC_Agent/agent && \
 	chmod +x /home/app/MTC_Agent/docker-entrypoint.sh
 
