@@ -21,7 +21,7 @@ RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppag
 	&& cd /app_build/ \
 	&& git submodule init \
 	&& git submodule update \
-	&& cmake -G 'Unix Makefiles' --config Release . \
+	&& cmake --config Release . \
 	&& make
 
 # ---- Release ----
