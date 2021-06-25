@@ -38,7 +38,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: user/MTConnect_Alpine_Agent:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mtconnect_alpine_agent:latest
       
       # steps:
       #   - name: Build and push Docker images
