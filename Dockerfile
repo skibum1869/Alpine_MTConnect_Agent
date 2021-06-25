@@ -12,9 +12,9 @@ FROM alpine-base AS alpine-core
 RUN apk upgrade \
 	&& apk add git \
 	python3 \
-	cmake \
 	g++ \
-	make
+	'cmake=3.18.4-r1'\
+	'make=4.3-r0'
 
 # Install and run cmake and make components
 RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppagent.git --depth 1 /app_build/ \
