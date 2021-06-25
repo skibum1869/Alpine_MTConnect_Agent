@@ -1,3 +1,5 @@
+[![Docker Publish](https://github.com/skibum1869/Alpine_MTConnect_Agent/actions/workflows/dockerpublish.yml/badge.svg?branch=master)](https://github.com/skibum1869/Alpine_MTConnect_Agent/actions/workflows/dockerpublish.yml)
+
 # MTConnnect_Alpine_Docker_Agent Project
 
 This repo houses a Docker-Compose version of the MTConnect Cpp agent. This creates most of the needed items to build a local docker CPP agent using docker and docker-compose.
