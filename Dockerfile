@@ -41,7 +41,6 @@ COPY ./Assets/ /MTC_Agent/assets
 COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
 COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
-COPY --from=alpine-core app_build/styles/favicon.ico /MTC_Agent/
 COPY --from=alpine-core app_build/agent/agent /MTC_Agent/
 
 # Set permission on the folder
