@@ -19,32 +19,27 @@ To add asset definitions to the compiled project include the following line unde
 # ---- Release ----
 ### Create folders, copy device files and dependencies for the release
 FROM alpine-base AS alpine-release
-LABEL author="skibum1869@HEM-Inc" description="Docker image for the latest MTConnect C++ Agent supplied \
-from the MTConnect Institute"
+LABEL author="skibum1869" description="Alpine based docker image for the latest Release Version of the MTConnect C++ Agent"
 EXPOSE 5000:5000/tcp
-
 RUN apk add --no-cache \
   libstdc++ \
   libc6-compat
 
-WORKDIR /MTC_Agent/
-
-# RUN mkdir /MTC_Agent/ 
+WORKDIR /MTC_Agent
 # COPY <src> <dest>
-COPY docker-entrypoint.sh /MTC_Agent/
-COPY agent.cfg /MTC_Agent/
-COPY ./Devices/ /MTC_Agent/
-COPY ./Assets/ /MTC_Agent/assets # Add this line
-COPY --from=core app_build/schemas/ /MTC_Agent/schemas
-COPY --from=core app_build/simulator/ /MTC_Agent/simulator
-COPY --from=core app_build/styles/ /MTC_Agent/styles
-COPY --from=core app_build/agent/agent /MTC_Agent/agent
+COPY agent.cfg docker-entrypoint.sh /MTC_Agent/
+COPY ./Devices/ /MTC_Agent/devices
+COPY ./Assets/ /MTC_Agent/assets
+COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
+COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
+COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
+COPY --from=alpine-core app_build/agent/agent /MTC_Agent/
 
 # Set permission on the folder
 RUN chmod +x /MTC_Agent/agent && \
   chmod +x /MTC_Agent/docker-entrypoint.sh
 
-ENTRYPOINT ["/bin/sh", "-x", "/MTC_Agent/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "-x", "./docker-entrypoint.sh"]
 ### EOF
 ```
 
@@ -57,7 +52,7 @@ docker-entrypoint.sh:
 
 To edit the instance settings use the docker-compose.yml file. 
 ```yml
-version: '3.4'
+version: '3.5'
 services:
   web:
     build: .
@@ -68,9 +63,9 @@ services:
         published: 5000
         protocol: tcp
         mode: host
-    entrypoint: "sh -x docker-entrypoint.sh"
-    working_dir: "/MTC_Agent/"
-    container_name: MTConnect_Agent
+    entrypoint: "/bin/sh -x ./docker-entrypoint.sh"
+    working_dir: "/MTC_Agent"
+    container_name: Alpine_MTConnect_Agent
     restart: unless-stopped
     volumes:
       - type: bind
@@ -85,31 +80,13 @@ Running a project form the prebuilt dockerhub libarary will speed up the build t
 
 To get the project running create a dockerfile, docker-entrypoint.sh, and a docker-compose.yml file similar to the ones below.
 
-DockerFile:
-```bash
-# ---- Release ----
-### Create folders, copy device files and dependencies for the release
-FROM skibum1869/mtconnect_alpine_agent:latest AS release
-LABEL author="skibum1869"
-LABEL description="Docker image for the latest MTConnect C++ Agent supplied \
-from the MTConnect Institute"
-EXPOSE 5000:5000/tcp
-
-WORKDIR /MTC_Agent/
-# COPY <src> <dest>
-COPY agent.cfg /MTC_Agent/
-COPY ./Devices/ /MTC_Agent/
-
-ENTRYPOINT ["/bin/sh", "-x", "/MTC_Agent/docker-entrypoint.sh"]
-### EOF
-```
-
 To edit the instance settings use the docker-compose.yml file. 
 ```yml
-version: '3.4'
+version: '3.5'
 services:
-  web:
-    build: .
+  agent:
+    container_name: MTConnect_Agent
+    image: skibum1869/mtconnect_alpine_agent:latest
     environment:
       - TZ=Etc/UTC
     ports: 
@@ -117,15 +94,17 @@ services:
         published: 5000
         protocol: tcp
         mode: host
-    entrypoint: "/bin/sh -x docker-entrypoint.sh"
-    working_dir: "/MTC_Agent/"
-    container_name: MTConnect_Agent
+    entrypoint: "/bin/sh -x ./docker-entrypoint.sh"
+    working_dir: "/MTC_Agent"
     restart: unless-stopped
     volumes:
       - type: bind
         source: ./log/adapter.log
         target: /MTC_Agent/adapter.log
         consistency: delegated
+      - './agent.cfg:/MTC_Agent/agent.cfg'
+      - './mtconnect-devicefiles/Devices/:/MTC_Agent/devices'
+      - './mtconnect-devicefiles/Assets/:/MTC_Agent/assets'
 ```
 
 # Core Docker and MTConnect Commands
