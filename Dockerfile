@@ -12,7 +12,7 @@ FROM alpine-base AS alpine-core
 RUN apk upgrade \
 	&& apk add git \
 	python3 \
-	g++-10.3.1 \
+	g++@10.3.1 \
 	cmake\
 	make
 
