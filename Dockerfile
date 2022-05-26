@@ -41,8 +41,8 @@ RUN	apk add --no-cache \
 WORKDIR /MTC_Agent/
 COPY agent.cfg /MTC_Agent/
 COPY docker-entrypoint.sh /MTC_Agent/
-COPY ./mtconnect-devicefiles/Devices/ /MTC_Agent/devices
-COPY ./mtconnect-devicefiles/Assets/ /MTC_Agent/assets
+COPY ./Devices/ /MTC_Agent/devices
+COPY ./Assets/ /MTC_Agent/assets
 COPY --from=alpine-core app_build/schemas/ /MTC_Agent/schemas
 COPY --from=alpine-core app_build/simulator/ /MTC_Agent/simulator
 COPY --from=alpine-core app_build/styles/ /MTC_Agent/styles
