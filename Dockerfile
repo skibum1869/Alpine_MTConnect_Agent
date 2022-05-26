@@ -20,6 +20,7 @@ RUN python3 -m ensurepip \
 	&& pip3 install conan \
 	&& cd /app_build/ \
 	&& conan export conan/mqtt_cpp/ \
+	&& conan export conan/mruby/ \
 	&& conan install . -if build --build=missing -pr conan/profiles/docker
 
 RUN	cd /app_build/ \
