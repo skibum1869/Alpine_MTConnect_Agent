@@ -10,7 +10,7 @@ FROM alpine:latest AS alpine-base
 # Get and install glibc for alpine
 FROM alpine-base AS alpine-core
 RUN apk upgrade \
-	&& apk add g++ python3 cmake git linux-headers make perl rake
+	&& apk add g++ python3 cmake git linux-headers make perl ruby
 
 RUN git clone --recurse-submodules --progress https://github.com/mtconnect/cppagent.git --depth 1 /app_build/
 
